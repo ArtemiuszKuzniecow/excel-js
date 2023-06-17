@@ -14,9 +14,10 @@ module.exports = {
   'rules': {
     'object-curly-spacing': 'error',
     'max-len': 'off',
+    'operator-linebreak': 'off',
     'require-jsdoc': ['error', {
       'require': {
-        'FunctionDeclaration': true,
+        'FunctionDeclaration': false,
         'MethodDefinition': false,
         'ClassDeclaration': false,
         'ArrowFunctionExpression': false,
