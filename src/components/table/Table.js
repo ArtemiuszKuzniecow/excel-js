@@ -9,8 +9,10 @@ export class Table extends ExcelComponent {
       listeners: ['mousedown', 'mouseup', 'mousemove'],
     });
     this.resizeStore = {
-      hasResizeStarted: false,
-      initialCoord: 0,
+      hasResizeStartedX: false,
+      initialCoordX: 0,
+      finalCoordX: 0,
+      currentElement: null,
     };
   }
 
@@ -21,28 +23,23 @@ export class Table extends ExcelComponent {
   onMousedown(event) {
     const {target} = event;
     if (target.dataset.resize) {
-      console.log('start resizing');
-      console.log(target);
-      this.resizeStore.hasResizeStarted = true;
-      console.log(`Mouse X: ${event.clientX}, Mouse Y: ${event.clientY}`);
-      console.log(target.parentNode.getBoundingClientRect());
+      if (target.dataset.resize === 'col') {
+        this.resizeStore.hasResizeStartedX = true;
+        this.initialCoordX = Number(event.clientX);
+        this.currentElement = target.parentNode;
+      }
     }
   }
 
   onMousemove(event) {
-    const {target} = event;
-    if (this.resizeStore.hasResizeStarted) {
-      console.log('keep resizing');
-      console.log(`Mouse X: ${event.clientX}, Mouse Y: ${event.clientY}`);
-      console.log(target.parentNode.getBoundingClientRect());
-    }
   }
 
   onMouseup(event) {
-    const {target} = event;
-    console.log('finished resizing');
-    console.log(`Mouse X: ${event.clientX}, Mouse Y: ${event.clientY}`);
-    this.resizeStore.hasResizeStarted = false;
-    console.log(target);
+    this.finalCoordX = Number(event.clientX) - Number(this.initialCoordX);
+    this.currentElement.style = `width: ${this.currentElement.offsetWidth + this.finalCoordX}px`;
+    this.resizeStore.hasResizeStartedX = false;
+    this.initialCoordX = 0;
+    this.finalCoordX = 0;
+    this.currentElement = null;
   }
 }
