@@ -1,5 +1,6 @@
 import {ExcelComponent} from '@core/ExcelComponent';
 import {createTable} from './table.template';
+import {$} from '@core/dom';
 
 export class Table extends ExcelComponent {
   static className = 'excel__table';
@@ -8,12 +9,6 @@ export class Table extends ExcelComponent {
     super($root, {
       listeners: ['mousedown', 'mouseup', 'mousemove'],
     });
-    this.resizeStore = {
-      hasResizeStartedX: false,
-      initialCoordX: 0,
-      finalCoordX: 0,
-      currentElement: null,
-    };
   }
 
   toHTML() {
@@ -21,25 +16,20 @@ export class Table extends ExcelComponent {
   }
 
   onMousedown(event) {
-    const {target} = event;
-    if (target.dataset.resize) {
-      if (target.dataset.resize === 'col') {
-        this.resizeStore.hasResizeStartedX = true;
-        this.initialCoordX = Number(event.clientX);
-        this.currentElement = target.parentNode;
-      }
+    if (event.target.dataset.resize) {
+      const $resizer = $(event.target);
+      const $parent = $resizer.closest('[data-type="resizable"]');
+      const coords = $parent.getCoords();
+
+      document.onmousemove = (e) => {
+        const delta = e.pageX - coords.right;
+        const value = coords.width + delta;
+        $parent.$el.style.width = value + 'px';
+      };
+
+      document.onmouseup = () => {
+        document.onmousemove = null;
+      };
     }
-  }
-
-  onMousemove(event) {
-  }
-
-  onMouseup(event) {
-    this.finalCoordX = Number(event.clientX) - Number(this.initialCoordX);
-    this.currentElement.style = `width: ${this.currentElement.offsetWidth + this.finalCoordX}px`;
-    this.resizeStore.hasResizeStartedX = false;
-    this.initialCoordX = 0;
-    this.finalCoordX = 0;
-    this.currentElement = null;
   }
 }

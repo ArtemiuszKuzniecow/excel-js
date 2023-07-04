@@ -11,7 +11,7 @@ function toCell() {
 
 function toColumn(col) {
   return `
-    <div class="excel__table-row-data-column">
+    <div class="excel__table-row-data-column" data-type="resizable">
     ${col}
     <div class="excel__table-row-data-column-resize" data-resize="col"></div>
     </div>
