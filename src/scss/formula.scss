@@ -10,15 +10,15 @@
     height: $formula-height;
     display: flex;
     align-items: center;
-    border-bottom: 1px solid $border-color;
+    border-bottom: 1px solid $border-color-dark;
 
     &-info {
         font-size: 18px;
         font-style: italic;
         text-align: center;
-        border-right: 1px solid $border-color;
+        border-right: 1px solid $border-color-dark;
         min-width: $info-cell-width;
-        color: $border-color;
+        color: $border-color-dark;
         font-family: 'Playfair', serif;
 
     }
