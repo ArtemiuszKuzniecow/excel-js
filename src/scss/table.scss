@@ -18,16 +18,26 @@
             display: flex;
 
             &-column {
+                position: relative;
                 display: flex;
                 justify-content: center;
                 align-items: center;
                 background: #f8f9fa;
                 min-width: 40px;
                 width: $cell-width;
-                border: 1px solid $border-color;
+                border: 1px solid $border-color-dark;
                 border-top: 0;
                 border-left: 0;
                 height: 100%;
+
+                &-resize {
+                    @include cell-resize;
+                    top: 0;
+                    width: 4px;
+                    &:hover {
+                        cursor: col-resize;
+                    }
+                }
             }
 
             &-cell {
@@ -43,21 +53,32 @@
 
                 &-selected {
                     border: none;
-                    outline: 2px solid #3c74ff;
+                    outline: 2px solid $primary-color;
                     z-index: 2;
                 }
             }
         }
 
         &-info {
+            position: relative;
             display: flex;
             justify-content: center;
             align-items: center;
             min-width: $info-cell-width;
             height: 100%;
-            border: 1px solid $border-color;
+            border: 1px solid $border-color-dark;
             border-top: none;
             background: #f8f9fa;
+
+            &-resize {
+                @include cell-resize;
+                left: 0;
+                height: 3px;
+            
+                    &:hover {
+                        cursor: row-resize;
+                    }
+                }
         }
     }
 }

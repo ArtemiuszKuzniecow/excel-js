@@ -16,7 +16,5 @@ export class Formula extends ExcelComponent {
   }
 
   onInput() {
-    console.log(this.$root);
-    console.log('Formumla: onInput', event);
   }
 }

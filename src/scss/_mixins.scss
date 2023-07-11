@@ -26,3 +26,15 @@
     margin: 0;
     padding: 0;
 }
+
+@mixin cell-resize {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    background-color: $primary-color;
+    opacity: 0;
+    
+    &:hover {
+        opacity: 1;
+    }
+}

@@ -6,6 +6,12 @@
 @import "table";
 @import "dashboard";
 
+:root {
+    --primary-color: #{$primary-color};
+    --border-color-dark: #{$border-color-dark};
+    --border-color-light: #{$border-color-light};
+}
+
 * {
     margin: 0;
     padding: 0;
