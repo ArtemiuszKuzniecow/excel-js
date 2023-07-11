@@ -29,27 +29,30 @@ export class Table extends ExcelComponent {
         border: $childrenCol.length ? 'borderRight': 'borderBottom',
       };
 
+
       document.onmousemove = (e) => {
         const delta = $childrenCol.length ? e.pageX - coords.right : e.pageY - coords.bottom;
         const value = $childrenCol.length ? coords.width + delta : coords.height + delta;
 
-        [...children, $parent.$el].forEach((element) => {
-          element.style[styleAttributes.size] = value + 'px';
-          element.setAttribute('data-resize-process', 'true');
-          element.style[styleAttributes.border] = `2px solid ${primaryColor}`;
+        [...children, $parent].forEach((element) => {
+          element.css({
+            [styleAttributes.size]: `${value}px`,
+            [styleAttributes.border]: `2px solid ${primaryColor}`,
+          });
+          element.addAttribute('data-resize-process', 'true');
         });
       };
 
       document.onmouseup = () => {
         document.onmousemove = null;
-        const elements = document.querySelectorAll('[data-resize-process="true"]');
+        const elements = this.$root.findAll('[data-resize-process="true"]');
         elements.forEach((element) =>{
-          if (element.dataset.parent) {
-            element.style[styleAttributes.border] = `1px solid ${borderColorLight}`;
-          } if (!element.dataset.parent && element.dataset.resizeProcess) {
-            element.style[styleAttributes.border] = `1px solid ${borderColorDark}`;
+          if (element.data.parent) {
+            element.css({[styleAttributes.border]: `1px solid ${borderColorLight}`});
+          } if (!element.data.parent && element.data.resizeProcess) {
+            element.css({[styleAttributes.border]: `1px solid ${borderColorDark}`});
           }
-          element.removeAttribute('data-resize-process');
+          element.deleteAttribute('data-resize-process');
         });
       };
     }
