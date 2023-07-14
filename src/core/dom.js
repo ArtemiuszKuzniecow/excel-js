@@ -64,6 +64,12 @@ class Dom {
     this.$el.removeAttribute(attribute);
   }
 
+  removeInlineCss() {
+    Array.from(this.$el.style).forEach((existingStyle) => {
+      this.$el.style.removeProperty(existingStyle);
+    });
+  }
+
   css(style) {
     Object.keys(style).forEach((styleName) => {
       this.$el.style[styleName] = style[styleName];
