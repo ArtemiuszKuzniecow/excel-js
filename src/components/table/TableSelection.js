@@ -14,7 +14,9 @@ export class TableSelection {
     $el.addClass(constants.selected);
   }
 
-  selectGroup() {
-
+  selectGroup($els) {
+    $els.forEach((el) => {
+      el.addClass(constants.mutliselect);
+    });
   }
 }

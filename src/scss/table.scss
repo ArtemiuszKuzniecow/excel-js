@@ -57,6 +57,9 @@
                     outline: 3px solid $primary-color;
                     z-index: 2;
                 }
+                &-multiselect {
+                    background-color: $selected-cell-color;
+                }
             }
         }
 

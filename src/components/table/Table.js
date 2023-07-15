@@ -1,5 +1,6 @@
+// import {$} from '@core/dom';
 import {ExcelComponent} from '@core/ExcelComponent';
-import {currentCell, resizeTable} from './table.methods';
+import {currentCell, currentCells, resizeTable} from './table.methods';
 import {createTable} from './table.template';
 import {TableSelection} from './TableSelection';
 import {constants} from './table.constants';
@@ -9,7 +10,7 @@ export class Table extends ExcelComponent {
 
   constructor($root) {
     super($root, {
-      listeners: ['mousedown', 'click'],
+      listeners: ['mousedown'],
     });
   }
 
@@ -27,16 +28,29 @@ export class Table extends ExcelComponent {
     this.selection.selectOne($cell);
   }
 
-  onClick(event) {
-    const $cell = currentCell(event);
-    if ($cell) {
+  onMousedown(event) {
+    if (event.target.dataset.resize) {
+      resizeTable(event, this.$root);
+    } else if (event.target.dataset.id) {
+      const $cell = currentCell(event);
       const $prevCell = this.$root.find(`.${constants.selected}`);
-      this.selection.unselect($prevCell);
-      this.selection.selectOne($cell);
+      if ($cell) {
+        if (event.shiftKey) {
+          const cellIds = [];
+          const cells =[];
+          $prevCell
+            ? cellIds.push(...currentCells($cell.$el.dataset.id, $prevCell.$el.dataset.id))
+            : cellIds.push(...currentCells($cell.$el.dataset.id, this.$cell.$el.dataset.id));
+          cellIds.forEach((cellId) => {
+            cells.push(this.$root.find(`[data-id="${cellId}"]`));
+          });
+          this.selection.selectGroup(cells);
+        } else {
+          this.selection.unselect($prevCell);
+          this.selection.selectOne($cell);
+        }
+      }
     }
   }
-
-  onMousedown(event) {
-    resizeTable(event, this.$root);
-  }
 }
+
