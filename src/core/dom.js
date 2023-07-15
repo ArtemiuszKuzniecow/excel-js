@@ -49,6 +49,10 @@ class Dom {
     return this.$el.getBoundingClientRect();
   }
 
+  find(selector) {
+    return $(this.$el.querySelector(selector));
+  }
+
   findAll(selector) {
     const elementsArray = [];
     this.$el.querySelectorAll(selector).forEach((element) => {
@@ -62,6 +66,13 @@ class Dom {
   }
   deleteAttribute(attribute) {
     this.$el.removeAttribute(attribute);
+  }
+
+  addClass(className) {
+    this.$el.classList.add(className);
+  }
+  removeClass(className) {
+    this.$el.classList.remove(className);
   }
 
   removeInlineCss() {
