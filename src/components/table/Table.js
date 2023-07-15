@@ -18,7 +18,6 @@ export class Table extends ExcelComponent {
   }
 
   prepare() {
-    console.log('prepare');
     this.selection = new TableSelection();
   }
 
