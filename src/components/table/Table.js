@@ -1,16 +1,15 @@
-// import {$} from '@core/dom';
+import {$} from '@core/dom';
 import {ExcelComponent} from '@core/ExcelComponent';
-import {currentCell, currentCells, resizeTable} from './table.methods';
+import {currentCell, currentCells, resizeTable, navigateWithKeys} from './table.methods';
 import {createTable} from './table.template';
 import {TableSelection} from './TableSelection';
-import {constants} from './table.constants';
 
 export class Table extends ExcelComponent {
   static className = 'excel__table';
 
   constructor($root) {
     super($root, {
-      listeners: ['mousedown'],
+      listeners: ['mousedown', 'keydown'],
     });
   }
 
@@ -29,28 +28,28 @@ export class Table extends ExcelComponent {
   }
 
   onMousedown(event) {
-    if (event.target.dataset.resize) {
+    const target = $(event.target);
+    if (target.data.resize) {
       resizeTable(event, this.$root);
-    } else if (event.target.dataset.id) {
+    } else if (target.id()) {
       const $cell = currentCell(event);
-      const $prevCell = this.$root.find(`.${constants.selected}`);
+      const $prevCell = this.selection.current;
       if ($cell) {
         if (event.shiftKey) {
-          const cellIds = [];
           const cells =[];
-          $prevCell
-            ? cellIds.push(...currentCells($cell.$el.dataset.id, $prevCell.$el.dataset.id))
-            : cellIds.push(...currentCells($cell.$el.dataset.id, this.$cell.$el.dataset.id));
-          cellIds.forEach((cellId) => {
+          currentCells($cell.id(true), $prevCell.id(true)).forEach((cellId) => {
             cells.push(this.$root.find(`[data-id="${cellId}"]`));
           });
           this.selection.selectGroup(cells);
         } else {
-          this.selection.unselect($prevCell);
           this.selection.selectOne($cell);
         }
       }
     }
+  }
+
+  onKeydown(event) {
+    navigateWithKeys(event, this.selection.current, console.log);
   }
 }
 

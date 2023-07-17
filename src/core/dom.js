@@ -86,6 +86,19 @@ class Dom {
       this.$el.style[styleName] = style[styleName];
     });
   }
+
+  id(parse) {
+    if (parse) {
+      const parsed = this.data.id.split(':');
+      return {
+        row: parsed[0],
+        col: parsed[1],
+      };
+    }
+    if (this.data.id) {
+      return this.data.id;
+    }
+  }
 }
 
 export function $(selector) {

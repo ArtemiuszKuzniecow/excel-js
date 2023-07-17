@@ -48,12 +48,11 @@ export function currentCell(event) {
   if (currentElement.data.id) return currentElement;
 }
 
-export function currentCells(firstCellId, secondCellId) {
+export function currentCells(current, prev) {
   function getRange(start, end) {
     const bigger = start > end ? start : end;
     const smaller = start > end ? end : start;
     const result = [];
-    console.log();
     if (typeof smaller == 'string') {
       for (let i = smaller.charCodeAt(0); i <= bigger.charCodeAt(0); i++ ) {
         result.push(String.fromCharCode(i));
@@ -65,9 +64,17 @@ export function currentCells(firstCellId, secondCellId) {
     }
     return result;
   };
-  const lettersArray = getRange(firstCellId.split(':')[1], secondCellId.split(':')[1]);
-  const numbersArray = getRange(Number(firstCellId.split(':')[0]), Number(secondCellId.split(':')[0]));
+  const lettersArray = getRange(current.col, prev.col);
+  const numbersArray = getRange(Number(current.row), Number(prev.row));
   return numbersArray
       .map((number) => lettersArray.map((letter) => `${number}:${letter}`))
       .reduce((curr, acc) => acc.concat(...curr), [] );
+}
+
+export function navigateWithKeys(event, $el, callback) {
+  const keyNames = ['Enter', 'ArrowRight', 'ArrowLeft', 'ArrowDown', 'ArrowUp', 'Tab'];
+  const keyName = event.key;
+  if (keyNames.includes(keyName)) event.preventDefault();
+  const currentId = $el.id();
+  callback(keyName, $el, currentId);
 }
