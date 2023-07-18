@@ -1,4 +1,5 @@
 import {$} from '@core/dom';
+import {changeLetter} from '../../core/utils';
 
 export function resizeTable(event, $root) {
   const $resizer = $(event.target);
@@ -71,10 +72,25 @@ export function currentCells(current, prev) {
       .reduce((curr, acc) => acc.concat(...curr), [] );
 }
 
-export function navigateWithKeys(event, $el, callback) {
+export function navigateWithKeys(event, $el) {
   const keyNames = ['Enter', 'ArrowRight', 'ArrowLeft', 'ArrowDown', 'ArrowUp', 'Tab'];
   const keyName = event.key;
-  if (keyNames.includes(keyName)) event.preventDefault();
-  const currentId = $el.id();
-  callback(keyName, $el, currentId);
+  if (keyNames.includes(keyName)) {
+    event.preventDefault();
+  } else {
+    return;
+  }
+  const currentId = $el.id(true);
+  if (['ArrowRight', 'Tab'].includes(keyName)) {
+    currentId.col = changeLetter(currentId.col, 'plus');
+  } else if (['Enter', 'ArrowDown'].includes(keyName)) {
+    currentId.row = `${Number(currentId.row) + 1}`;
+  } else if (keyName === 'ArrowUp') {
+    if (currentId.row === '1') return;
+    currentId.row = `${Number(currentId.row) - 1}`;
+  } else {
+    if (currentId.col === 'A') return;
+    currentId.col = changeLetter(currentId.col, 'minus');
+  }
+  return `${currentId.row}:${currentId.col}`;
 }

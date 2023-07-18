@@ -21,6 +21,7 @@ export class TableSelection {
   selectOne($el) {
     this.clear();
     $el.addClass(constants.selected);
+    $el.focusElement();
     this.group.push($el);
     this.current = $el;
   }

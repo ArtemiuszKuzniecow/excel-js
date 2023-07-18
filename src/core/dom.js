@@ -87,6 +87,10 @@ class Dom {
     });
   }
 
+  focusElement() {
+    this.$el.focus();
+  }
+
   id(parse) {
     if (parse) {
       const parsed = this.data.id.split(':');

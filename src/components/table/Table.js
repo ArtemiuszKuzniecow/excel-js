@@ -49,7 +49,10 @@ export class Table extends ExcelComponent {
   }
 
   onKeydown(event) {
-    navigateWithKeys(event, this.selection.current, console.log);
+    const currentId = navigateWithKeys(event, this.selection.current);
+    if (currentId) {
+      this.selection.selectOne(this.$root.find(`[data-id="${currentId}"]`));
+    }
   }
 }
 
