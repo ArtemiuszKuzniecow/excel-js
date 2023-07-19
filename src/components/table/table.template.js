@@ -3,9 +3,9 @@ const CODES = {
   Z: 90,
 };
 
-function toCell(parent) {
+function toCell(parentCol) {
   return `
-    <div class="excel__table-row-data-cell" data-parent="${parent}" contenteditable></div>
+    <div class="excel__table-row-data-cell" data-parent-col="${parentCol}" data-parent-row="" contenteditable></div>
     `;
 }
 
@@ -19,13 +19,16 @@ function toColumn(col) {
 }
 
 function toRow(content, info = '') {
+  if (info.length) {
+    content = content.replaceAll(`data-parent-row=""`, `data-parent-row="${info}"`);
+  }
   return `
-     <div class="excel__table-row">
+     <div class="excel__table-row" data-type="resizable" data-row="${info}">
         <div class="excel__table-row-info">
         ${info}
           ${info && '<div class="excel__table-row-info-resize" data-resize="row"></div>'}
         </div>
-        <div class="excel__table-row-data">${content}</div>
+        <div class="excel__table-row-data" >${content}</div>
     </div>
     `;
 }
@@ -45,7 +48,7 @@ export function createTable(rowsCount = 15) {
 
   const cells = new Array(colsCount)
       .fill('')
-      .map((_, index) => toCell(toChar(_, index)))
+      .map((_, index) => toCell(toChar(_, index), index))
       .join('');
 
   rows.push(toRow(cols));

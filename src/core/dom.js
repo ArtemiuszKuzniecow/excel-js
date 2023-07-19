@@ -37,12 +37,37 @@ class Dom {
     }
   }
 
+  get data() {
+    return this.$el.dataset;
+  }
+
   closest(selector) {
     return $(this.$el.closest(selector));
   }
 
   getCoords() {
     return this.$el.getBoundingClientRect();
+  }
+
+  findAll(selector) {
+    const elementsArray = [];
+    this.$el.querySelectorAll(selector).forEach((element) => {
+      elementsArray.push($(element));
+    });
+    return elementsArray;
+  }
+
+  addAttribute(attribute, value) {
+    this.$el.setAttribute(attribute, value);
+  }
+  deleteAttribute(attribute) {
+    this.$el.removeAttribute(attribute);
+  }
+
+  css(style) {
+    Object.keys(style).forEach((styleName) => {
+      this.$el.style[styleName] = style[styleName];
+    });
   }
 }
 

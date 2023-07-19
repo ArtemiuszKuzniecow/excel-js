@@ -1,6 +1,7 @@
 import {ExcelComponent} from '@core/ExcelComponent';
 import {createTable} from './table.template';
 import {$} from '@core/dom';
+import {primaryColor, borderColorDark, borderColorLight} from '../../helpers/colors';
 
 export class Table extends ExcelComponent {
   static className = 'excel__table';
@@ -12,38 +13,46 @@ export class Table extends ExcelComponent {
   }
 
   toHTML() {
-    return createTable(20);
+    return createTable(100);
   }
 
   onMousedown(event) {
     if (event.target.dataset.resize) {
       const $resizer = $(event.target);
       const $parent = $resizer.closest('[data-type="resizable"]');
-      const $children = document.querySelectorAll(`[data-parent="${$parent.$el.dataset.column}"]`);
+      const $childrenCol = this.$root.findAll(`[data-parent-col="${$parent.data.column}"]`);
+      const $childreRow = this.$root.findAll(`[data-parent-row="${$parent.data.row}"]`);
       const coords = $parent.getCoords();
+      const children = $childrenCol.length ? $childrenCol: $childreRow;
+      const styleAttributes = {
+        size: $childrenCol.length ? 'width' : 'height',
+        border: $childrenCol.length ? 'borderRight': 'borderBottom',
+      };
+
 
       document.onmousemove = (e) => {
-        const delta = e.pageX - coords.right;
-        const value = coords.width + delta;
-        [...$children, $parent.$el].forEach((element) => {
-          const primaryColor = getComputedStyle(document.documentElement).getPropertyValue('--primary-color');
-          element.style.width = value + 'px';
-          element.setAttribute('data-resize-process', 'true');
-          element.style.borderRight = `2px solid ${primaryColor}`;
+        const delta = $childrenCol.length ? e.pageX - coords.right : e.pageY - coords.bottom;
+        const value = $childrenCol.length ? coords.width + delta : coords.height + delta;
+
+        [...children, $parent].forEach((element) => {
+          element.css({
+            [styleAttributes.size]: `${value}px`,
+            [styleAttributes.border]: `2px solid ${primaryColor}`,
+          });
+          element.addAttribute('data-resize-process', 'true');
         });
       };
 
       document.onmouseup = () => {
         document.onmousemove = null;
-        const elements = document.querySelectorAll('[data-resize-process="true"]');
-        const borderColorDark = getComputedStyle(document.documentElement).getPropertyValue('--border-color-dark');
-        const borderColorLight = getComputedStyle(document.documentElement).getPropertyValue('--border-color-light');
+        const elements = this.$root.findAll('[data-resize-process="true"]');
         elements.forEach((element) =>{
-          if (element.dataset.parent) {
-            element.style.borderRight = `1px solid ${borderColorLight}`;
-          } if (!element.dataset.parent && element.dataset.resizeProcess) {
-            element.style.borderRight = `1px solid ${borderColorDark}`; element.removeAttribute('data-resize-process');
+          if (element.data.parent) {
+            element.css({[styleAttributes.border]: `1px solid ${borderColorLight}`});
+          } if (!element.data.parent && element.data.resizeProcess) {
+            element.css({[styleAttributes.border]: `1px solid ${borderColorDark}`});
           }
+          element.deleteAttribute('data-resize-process');
         });
       };
     }
