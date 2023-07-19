@@ -7,9 +7,11 @@ import {TableSelection} from './TableSelection';
 export class Table extends ExcelComponent {
   static className = 'excel__table';
 
-  constructor($root) {
+  constructor($root, options) {
     super($root, {
+      name: 'Table',
       listeners: ['mousedown', 'keydown'],
+      ...options,
     });
   }
 
@@ -25,6 +27,10 @@ export class Table extends ExcelComponent {
     super.init();
     const $cell = this.$root.find('[data-id="1:A"]');
     this.selection.selectOne($cell);
+
+    this.$on('formula:input', (text) => {
+      this.selection.current.text(text);
+    });
   }
 
   onMousedown(event) {

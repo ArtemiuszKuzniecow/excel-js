@@ -1,5 +1,6 @@
 import {$} from '@core/dom';
 import {changeLetter} from '../../core/utils';
+import {constants} from './table.constants';
 
 export function resizeTable(event, $root) {
   const $resizer = $(event.target);
@@ -75,22 +76,22 @@ export function currentCells(current, prev) {
 export function navigateWithKeys(event, $el) {
   const keyNames = ['Enter', 'ArrowRight', 'ArrowLeft', 'ArrowDown', 'ArrowUp', 'Tab'];
   const keyName = event.key;
-  if (keyNames.includes(keyName)) {
+  const currentId = $el.id(true);
+  if (keyNames.includes(keyName) && !event.shiftKey) {
     event.preventDefault();
+    if (['ArrowRight', 'Tab'].includes(keyName)) {
+      currentId.col = changeLetter(currentId.col, 'plus');
+    } else if (['Enter', 'ArrowDown'].includes(keyName)) {
+      currentId.row = `${Number(currentId.row) + 1}`;
+    } else if (keyName === 'ArrowUp') {
+      if (currentId.row === constants.mivValueRow) return;
+      currentId.row = `${Number(currentId.row) - 1}`;
+    } else {
+      if (currentId.col === constants.mivValueCol) return;
+      currentId.col = changeLetter(currentId.col, 'minus');
+    }
   } else {
     return;
-  }
-  const currentId = $el.id(true);
-  if (['ArrowRight', 'Tab'].includes(keyName)) {
-    currentId.col = changeLetter(currentId.col, 'plus');
-  } else if (['Enter', 'ArrowDown'].includes(keyName)) {
-    currentId.row = `${Number(currentId.row) + 1}`;
-  } else if (keyName === 'ArrowUp') {
-    if (currentId.row === '1') return;
-    currentId.row = `${Number(currentId.row) - 1}`;
-  } else {
-    if (currentId.col === 'A') return;
-    currentId.col = changeLetter(currentId.col, 'minus');
   }
   return `${currentId.row}:${currentId.col}`;
 }
