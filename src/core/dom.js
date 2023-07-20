@@ -93,7 +93,6 @@ class Dom {
   }
 
   focusElement() {
-    // const end = this.$el.textContent.length - 1;
     const selection = window.getSelection();
     const range = document.createRange();
     selection.removeAllRanges();
