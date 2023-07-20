@@ -13,7 +13,16 @@ export class Formula extends ExcelComponent {
 
   toHTML() {
     return `<div class="excel__formula-info">fx</div>
-            <div class="excel__formula-input" contenteditable spellcheck="false"></div>`;
+            <div class="excel__formula-input" contenteditable spellcheck="false" data-input="true"></div>`;
+  }
+
+  init() {
+    super.init();
+    this.$on('formula:focus', (text) => {
+      console.log('works');
+      const input = this.$root.find(`[data-input="true"]`);
+      input.text(text);
+    });
   }
 
   onInput(event) {
@@ -28,4 +37,14 @@ export class Formula extends ExcelComponent {
       this.$emit('formula:unfocus');
     }
   }
+
+  // onMousedown(event) {
+  //   focus(this);
+  //   function focus(parent) {
+  //     parent.$on('formula:focus', (text) => {
+  //       const input = parent.$root.find(`[data-input="true"]`);
+  //       input.text(text || '');
+  //     });
+  //   }
+  // }
 }

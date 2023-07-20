@@ -39,6 +39,7 @@ export class Table extends ExcelComponent {
 
   onMousedown(event) {
     const target = $(event.target);
+    this.$emit('formula:focus', target.text());
     if (target.data.resize) {
       resizeTable(event, this.$root);
     } else if (target.id()) {
@@ -63,6 +64,9 @@ export class Table extends ExcelComponent {
     if (currentId) {
       this.selection.selectOne(this.$root.find(`[data-id="${currentId}"]`));
     }
+    const pattern = /^[a-zA-Z0-9,.-]*$/;
+    const currentKey = pattern.test(event.key) ? event.key : '';
+    this.$emit('formula:focus', event.target.innerText + currentKey);
   }
 }
 
