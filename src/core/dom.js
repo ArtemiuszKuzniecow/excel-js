@@ -15,6 +15,7 @@ class Dom {
 
   text(text) {
     this.$el.textContent = text;
+    return this;
   }
 
   clear() {
@@ -92,6 +93,13 @@ class Dom {
   }
 
   focusElement() {
+    // const end = this.$el.textContent.length - 1;
+    const selection = window.getSelection();
+    const range = document.createRange();
+    selection.removeAllRanges();
+    range.selectNodeContents(this.$el);
+    range.collapse(false);
+    selection.addRange(range);
     this.$el.focus();
   }
 

@@ -6,7 +6,7 @@ export class Formula extends ExcelComponent {
   constructor($root, options) {
     super($root, {
       name: 'Formula',
-      listeners: ['input'],
+      listeners: ['input', 'keydown'],
       ...options,
     });
   }
@@ -19,5 +19,13 @@ export class Formula extends ExcelComponent {
   onInput(event) {
     const text = event.target.textContent.trim();
     this.$emit('formula:input', text);
+  }
+
+  onKeydown(event) {
+    if (event.key === 'Enter') {
+      event.preventDefault();
+      event.target.blur();
+      this.$emit('formula:unfocus');
+    }
   }
 }
