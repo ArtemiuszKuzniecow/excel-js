@@ -14,10 +14,6 @@ export class TableSelection {
     this.group = [];
   }
 
-  unselect($el) {
-    $el.removeClass(constants.selected);
-  }
-
   selectOne($el) {
     this.clear();
     $el.addClass(constants.selected);

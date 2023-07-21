@@ -39,10 +39,10 @@ export class Table extends ExcelComponent {
 
   onMousedown(event) {
     const target = $(event.target);
-    this.$emit('formula:focus', target.text());
     if (target.data.resize) {
       resizeTable(event, this.$root);
     } else if (target.id()) {
+      this.$emit('formula:focus', target.text());
       const $cell = currentCell(event);
       const $prevCell = this.selection.current;
       if ($cell) {
@@ -60,13 +60,14 @@ export class Table extends ExcelComponent {
   }
 
   onKeydown(event) {
+    const target = $(event.target);
     const currentId = navigateWithKeys(event, this.selection.current);
+    let textContent = event?.key?.length === 1 ? target.text() + event.key : target.text();
     if (currentId) {
       this.selection.selectOne(this.$root.find(`[data-id="${currentId}"]`));
+      textContent = this.$root.find(`[data-id="${currentId}"]`).text();
     }
-    const pattern = /^[a-zA-Z0-9,.-]*$/;
-    const currentKey = pattern.test(event.key) ? event.key : '';
-    this.$emit('formula:focus', event.target.innerText + currentKey);
+    this.$emit('formula:focus', textContent);
   }
 }
 

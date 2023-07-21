@@ -20,6 +20,10 @@ class Dom {
     return this.$el.textContent;
   }
 
+  clearText() {
+    this.$el.textContent = '';
+  }
+
   clear() {
     this.html('');
     return this;

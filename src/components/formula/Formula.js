@@ -19,9 +19,8 @@ export class Formula extends ExcelComponent {
   init() {
     super.init();
     this.$on('formula:focus', (text) => {
-      console.log('works');
       const input = this.$root.find(`[data-input="true"]`);
-      input.text(text);
+      text ? input.text(text) : input.clearText();
     });
   }
 
@@ -37,14 +36,4 @@ export class Formula extends ExcelComponent {
       this.$emit('formula:unfocus');
     }
   }
-
-  // onMousedown(event) {
-  //   focus(this);
-  //   function focus(parent) {
-  //     parent.$on('formula:focus', (text) => {
-  //       const input = parent.$root.find(`[data-input="true"]`);
-  //       input.text(text || '');
-  //     });
-  //   }
-  // }
 }
