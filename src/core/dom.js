@@ -16,12 +16,14 @@ class Dom {
   text(text) {
     if (text) {
       this.$el.textContent = text;
+      return this;
     }
     return this.$el.textContent;
   }
 
   clearText() {
     this.$el.textContent = '';
+    return this;
   }
 
   clear() {
@@ -74,16 +76,20 @@ class Dom {
 
   addAttribute(attribute, value) {
     this.$el.setAttribute(attribute, value);
+    return this;
   }
   deleteAttribute(attribute) {
     this.$el.removeAttribute(attribute);
+    return this;
   }
 
   addClass(className) {
     this.$el.classList.add(className);
+    return this;
   }
   removeClass(className) {
     this.$el.classList.remove(className);
+    return this;
   }
 
   removeInlineCss() {

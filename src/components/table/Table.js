@@ -27,6 +27,7 @@ export class Table extends ExcelComponent {
     super.init();
     const $cell = this.$root.find('[data-id="1:A"]');
     this.selection.selectOne($cell);
+    this.$emit('formula:focus', $cell.text());
 
     this.$on('formula:input', (text) => {
       this.selection.current.text(text);

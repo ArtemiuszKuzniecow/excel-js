@@ -30,7 +30,7 @@ export class Formula extends ExcelComponent {
   }
 
   onKeydown(event) {
-    if (event.key === 'Enter') {
+    if (event.key === 'Enter' || event.key === 'Tab') {
       event.preventDefault();
       event.target.blur();
       this.$emit('formula:unfocus');
