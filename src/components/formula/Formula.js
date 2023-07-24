@@ -22,6 +22,9 @@ export class Formula extends ExcelComponent {
       const input = this.$root.find(`[data-input="true"]`);
       text ? input.text(text) : input.clearText();
     });
+
+
+    this.$subscribe((state) => console.log('formela state', state));
   }
 
   onInput(event) {

@@ -36,6 +36,8 @@ export class Table extends ExcelComponent {
     this.$on('formula:unfocus', () => {
       this.selection.current.focusElement();
     });
+
+    this.$subscribe((state) => console.log('table state', state));
   }
 
   onMousedown(event) {
@@ -46,6 +48,7 @@ export class Table extends ExcelComponent {
       this.$emit('formula:focus', target.text());
       const $cell = currentCell(event);
       const $prevCell = this.selection.current;
+      this.$dispatch({type: 'test'});
       if ($cell) {
         if (event.shiftKey) {
           const cells =[];

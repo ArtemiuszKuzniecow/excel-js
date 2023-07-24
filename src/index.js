@@ -7,7 +7,7 @@ import {Header} from '@/components/header/Header';
 import {rootReducer} from '@/redux/rootReducer';
 import './scss/index.scss';
 
-const store = new Store(rootReducer);
+const store = new Store(rootReducer, {myTable: 'my table'});
 
 const excel = new Excel('#app', {components: [Header, Toolbar, Formula, Table], store});
 
