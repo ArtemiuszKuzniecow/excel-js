@@ -3,6 +3,7 @@ import {ExcelComponent} from '@core/ExcelComponent';
 import {currentCell, currentCells, resizeTable, navigateWithKeys} from './table.methods';
 import {createTable} from './table.template';
 import {TableSelection} from './TableSelection';
+import * as actions from '@/redux/actions';
 
 export class Table extends ExcelComponent {
   static className = 'excel__table';
@@ -16,7 +17,7 @@ export class Table extends ExcelComponent {
   }
 
   toHTML() {
-    return createTable(20);
+    return createTable(20, this.store.getState());
   }
 
   prepare() {
@@ -40,10 +41,19 @@ export class Table extends ExcelComponent {
     this.$subscribe((state) => console.log('table state', state));
   }
 
+  async resizeHandler(event) {
+    try {
+      const data = await resizeTable(event, this.$root);
+      this.$dispatch(actions.tableResize(data));
+    } catch (error) {
+      console.warn('Resize error', error);
+    }
+  }
+
   onMousedown(event) {
     const target = $(event.target);
     if (target.data.resize) {
-      resizeTable(event, this.$root);
+      this.resizeHandler(event);
     } else if (target.id()) {
       this.$emit('formula:focus', target.text());
       const $cell = currentCell(event);
