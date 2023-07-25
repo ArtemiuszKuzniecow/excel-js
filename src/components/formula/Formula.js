@@ -24,7 +24,7 @@ export class Formula extends ExcelComponent {
     });
 
 
-    this.$subscribe((state) => console.log('formela state', state));
+    this.$subscribe((state) => console.log('formula state', state));
   }
 
   onInput(event) {
