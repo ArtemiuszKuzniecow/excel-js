@@ -15,6 +15,7 @@ module.exports = {
     'object-curly-spacing': 'error',
     'max-len': 'off',
     'operator-linebreak': 'off',
+    'prefer-const': 'off',
     'require-jsdoc': ['error', {
       'require': {
         'FunctionDeclaration': false,

@@ -13,6 +13,19 @@ class Dom {
     return this.$el.outerHTML.trim();
   }
 
+  text(text) {
+    if (text) {
+      this.$el.textContent = text;
+      return this;
+    }
+    return this.$el.textContent;
+  }
+
+  clearText() {
+    this.$el.textContent = '';
+    return this;
+  }
+
   clear() {
     this.html('');
     return this;
@@ -63,16 +76,20 @@ class Dom {
 
   addAttribute(attribute, value) {
     this.$el.setAttribute(attribute, value);
+    return this;
   }
   deleteAttribute(attribute) {
     this.$el.removeAttribute(attribute);
+    return this;
   }
 
   addClass(className) {
     this.$el.classList.add(className);
+    return this;
   }
   removeClass(className) {
     this.$el.classList.remove(className);
+    return this;
   }
 
   removeInlineCss() {
@@ -85,6 +102,29 @@ class Dom {
     Object.keys(style).forEach((styleName) => {
       this.$el.style[styleName] = style[styleName];
     });
+  }
+
+  focusElement() {
+    const selection = window.getSelection();
+    const range = document.createRange();
+    selection.removeAllRanges();
+    range.selectNodeContents(this.$el);
+    range.collapse(false);
+    selection.addRange(range);
+    this.$el.focus();
+  }
+
+  id(parse) {
+    if (parse) {
+      const parsed = this.data.id.split(':');
+      return {
+        row: parsed[0],
+        col: parsed[1],
+      };
+    }
+    if (this.data.id) {
+      return this.data.id;
+    }
   }
 }
 
