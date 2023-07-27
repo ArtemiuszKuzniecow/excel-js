@@ -18,17 +18,18 @@ export class Formula extends ExcelComponent {
 
   init() {
     super.init();
-    this.$on('formula:focus', (text) => {
-      const input = this.$root.find(`[data-input="true"]`);
-      text ? input.text(text) : input.clearText();
+    const input = this.$root.find(`[data-input="true"]`);
+    input.text(this.store.state.currentText);
+
+    this.$subscribe(() => {
+      if (!this.store.state.currentText) input.clearText();
+      input.text(this.store.state.currentText);
     });
-
-
-    this.$subscribe((state) => console.log('formula state', state));
   }
 
   onInput(event) {
     const text = event.target.textContent.trim();
+
     this.$emit('formula:input', text);
   }
 

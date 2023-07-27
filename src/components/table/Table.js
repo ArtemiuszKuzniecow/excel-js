@@ -29,16 +29,16 @@ export class Table extends ExcelComponent {
     const $cell = this.$root.find('[data-id="1:A"]');
     this.selection.selectOne($cell);
     this.$emit('formula:focus', $cell.text());
+    this.$dispatch(actions.changeText({text: $cell.text()}));
 
     this.$on('formula:input', (text) => {
+      this.$dispatch(actions.changeText({text: text, id: this.selection.current.id()}));
       this.selection.current.text(text);
     });
 
     this.$on('formula:unfocus', () => {
       this.selection.current.focusElement();
     });
-
-    this.$subscribe((state) => console.log('table state', state));
   }
 
   async resizeHandler(event) {
@@ -56,9 +56,9 @@ export class Table extends ExcelComponent {
       this.resizeHandler(event);
     } else if (target.id()) {
       this.$emit('formula:focus', target.text());
+      this.$dispatch(actions.changeText({text: target.text()}));
       const $cell = currentCell(event);
       const $prevCell = this.selection.current;
-      this.$dispatch({type: 'test'});
       if ($cell) {
         if (event.shiftKey) {
           const cells =[];
@@ -75,12 +75,22 @@ export class Table extends ExcelComponent {
 
   onKeydown(event) {
     const target = $(event.target);
-    const currentId = navigateWithKeys(event, this.selection.current);
+
+    // INPUT
+    // TODO create helper to optimize it
     let textContent = event?.key?.length === 1 ? target.text() + event.key : target.text();
-    if (currentId) {
-      this.selection.selectOne(this.$root.find(`[data-id="${currentId}"]`));
-      textContent = this.$root.find(`[data-id="${currentId}"]`).text();
+    if (event?.key === 'Backspace') textContent = target.text().substring(0, target.text().length - 1);
+
+    // NAVIGATION WITH KEYS
+    const navigationId = navigateWithKeys(event, this.selection.current);
+    if (navigationId) {
+      this.selection.selectOne(this.$root.find(`[data-id="${navigationId}"]`));
+      textContent = this.$root.find(`[data-id="${navigationId}"]`).text();
+      this.$dispatch(actions.changeText({text: textContent}));
+      return;
     }
+
+    this.$dispatch(actions.changeText({text: textContent, id: target.id()}));
     this.$emit('formula:focus', textContent);
   }
 }

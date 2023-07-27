@@ -18,7 +18,7 @@ class Dom {
       this.$el.textContent = text;
       return this;
     }
-    return this.$el.textContent;
+    return this.$el.textContent.trim();
   }
 
   clearText() {

@@ -4,13 +4,14 @@ export const CODES = {
 };
 
 function toCell(parentCol, state) {
+  const sizeState = state.sizeState;
   return `
     <div 
       class="excel__table-row-data-cell" 
       data-parent-col="${parentCol}" 
       data-parent-row="" 
       data-id="${parentCol}" 
-      ${state[parentCol] ? `style="width: ${state[parentCol]}px"` : ''}
+      ${sizeState[parentCol] ? `style="width: ${sizeState[parentCol]}px"` : ''}
       contenteditable 
       >
     </div>
@@ -60,7 +61,7 @@ export function createTable(rowsCount = 15, state = {}) {
 
   const cells = new Array(colsCount)
       .fill('')
-      .map((_, index) => toCell(toChar(_, index), sizeState))
+      .map((_, index) => toCell(toChar(_, index), state))
       .join('');
 
   rows.push(toRow(cols));
