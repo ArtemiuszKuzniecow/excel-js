@@ -44,3 +44,8 @@ export function resizeTable(event, $root) {
     };
   }
 }
+
+export function currentCell(event) {
+  const currentElement = $(event.target);
+  if (currentElement.data.id) return currentElement;
+}
