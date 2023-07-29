@@ -76,12 +76,10 @@ export class Table extends ExcelComponent {
   onKeydown(event) {
     const target = $(event.target);
 
-    // INPUT
     // TODO create helper to optimize it
     let textContent = event?.key?.length === 1 ? target.text() + event.key : target.text();
     if (event?.key === 'Backspace') textContent = target.text().substring(0, target.text().length - 1);
 
-    // NAVIGATION WITH KEYS
     const navigationId = navigateWithKeys(event, this.selection.current);
     if (navigationId) {
       this.selection.selectOne(this.$root.find(`[data-id="${navigationId}"]`));

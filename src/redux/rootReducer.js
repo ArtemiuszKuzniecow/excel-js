@@ -10,7 +10,8 @@ export function rootReducer(state, action) {
       const currentText = action.data.text;
       let currentCell;
       if (action.data.id) currentCell = {[action.data.id]: action.data.text};
-      return {...state, currentText: currentText, ...currentCell};
+      return {
+        ...state, currentText: currentText, dataState: {...state.dataState, ...currentCell}};
     default: return state;
   }
 }

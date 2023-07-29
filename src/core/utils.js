@@ -16,3 +16,22 @@ export function storage(key, data = null) {
     return JSON.parse(localStorage.getItem(key));
   }
 }
+
+export function getLetters(str, word) {
+  const letters = [];
+  let index = -1;
+
+  while ((index = str.indexOf(word, index + 1)) !== -1) {
+    const lastIndex = index + word.length;
+    letters.push(str[lastIndex]);
+  }
+
+  return letters;
+}
+
+export function isEqual(a, b) {
+  if (typeof a === 'object' && typeof b === 'object') {
+    return JSON.stringify(a) === JSON.stringify(b);
+  }
+  return a === b;
+}

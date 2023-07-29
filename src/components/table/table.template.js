@@ -1,3 +1,5 @@
+import {getLetters} from '@/core/utils';
+
 export const CODES = {
   A: 65,
   Z: 90,
@@ -7,12 +9,12 @@ function toCell(parentCol, state) {
   const sizeState = state.sizeState;
   return `
     <div 
-      class="excel__table-row-data-cell" 
+      class="excel__table-row-data-cell"
+      contenteditable 
+      ${sizeState[parentCol] ? `style="width: ${sizeState[parentCol]}px"` : ''}
       data-parent-col="${parentCol}" 
       data-parent-row="" 
       data-id="${parentCol}" 
-      ${sizeState[parentCol] ? `style="width: ${sizeState[parentCol]}px"` : ''}
-      contenteditable 
       >
     </div>
     `;
@@ -20,19 +22,36 @@ function toCell(parentCol, state) {
 
 function toColumn(col, width) {
   return `
-    <div class="excel__table-row-data-column" data-type="resizable" data-column="${col}" ${width ? `style="width: ${width}px"` : ''}>
+    <div 
+    class="excel__table-row-data-column" 
+    data-type="resizable" 
+    data-column="${col}"
+    ${width ? `style="width: ${width}px"` : ''}>
     ${col}
-    <div class="excel__table-row-data-column-resize" data-resize="col"></div>
+       <div class="excel__table-row-data-column-resize"
+       data-resize="col">
+     </div>
     </div>
     `;
 }
 
-function toRow(content, row = '', height ) {
+function toRow(content, row = '', height, state = '') {
+  const cols = getLetters(content, 'data-parent-col="');
   if (row.length) {
     content =
       content
           .replaceAll(`data-parent-row=""`, `data-parent-row="${row}"`)
           .replaceAll(`data-id="`, `data-id="${row}:`);
+  }
+  if (state.dataState) {
+    if (Array.isArray(cols)) {
+      cols.forEach((col) => {
+        content =
+          content.replace(`data-id="${row}:${col}" 
+      >`, `data-id="${row}:${col}"
+      >${state.dataState?.[`${row}:${col}`] ? state.dataState[`${row}:${col}`]: ''}`);
+      });
+    }
   }
   return `
      <div class="excel__table-row" data-type="resizable" data-row="${row}" ${height ? `style="height: ${height}px"` : ''}>
@@ -67,7 +86,7 @@ export function createTable(rowsCount = 15, state = {}) {
   rows.push(toRow(cols));
 
   for (let i = 0; i < rowsCount; i++) {
-    rows.push(toRow(cells, `${i + 1}`, sizeState[i+1]));
+    rows.push(toRow(cells, `${i + 1}`, sizeState[i+1], state));
   }
 
   return rows.join('');
