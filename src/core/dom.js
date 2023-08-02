@@ -104,6 +104,13 @@ class Dom {
     });
   }
 
+  getStyles(style = []) {
+    return style.reduce((res, style) => {
+      res[style] = this.$el.style[style];
+      return res;
+    }, {});
+  }
+
   focusElement() {
     const selection = window.getSelection();
     const range = document.createRange();

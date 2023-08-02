@@ -1,4 +1,6 @@
 import {getLetters} from '@/core/utils';
+import {defaultStyles} from '@/constants.js';
+import {camelToDashCase} from '../../core/utils';
 
 export const CODES = {
   A: 65,
@@ -7,11 +9,15 @@ export const CODES = {
 
 function toCell(parentCol, state) {
   const sizeState = state.sizeState;
+  const styles = Object.keys(defaultStyles)
+      .map((key) => `${camelToDashCase(key)}: ${defaultStyles[key]}`)
+      .join('; ');
+
   return `
     <div 
       class="excel__table-row-data-cell"
       contenteditable 
-      ${sizeState[parentCol] ? `style="width: ${sizeState[parentCol]}px"` : ''}
+      ${sizeState[parentCol] ? `style="${styles}; width: ${sizeState[parentCol]}px"` : `${styles}`}
       data-parent-col="${parentCol}" 
       data-parent-row="" 
       data-id="${parentCol}" 

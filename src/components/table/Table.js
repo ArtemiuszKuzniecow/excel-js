@@ -4,6 +4,7 @@ import {currentCell, currentCells, resizeTable, navigateWithKeys} from './table.
 import {createTable} from './table.template';
 import {TableSelection} from './TableSelection';
 import * as actions from '@/redux/actions';
+import {defaultStyles} from '../../constants';
 
 export class Table extends ExcelComponent {
   static className = 'excel__table';
@@ -39,6 +40,8 @@ export class Table extends ExcelComponent {
     this.$on('formula:unfocus', () => {
       this.selection.current.focusElement();
     });
+
+    this.$on('toolbar:applyStyle', (style) => this.selection.applyStyle(style));
   }
 
   async resizeHandler(event) {
@@ -68,6 +71,9 @@ export class Table extends ExcelComponent {
           this.selection.selectGroup(cells);
         } else {
           this.selection.selectOne($cell);
+          const styles = $cell.getStyles(Object.keys(defaultStyles));
+          console.log(styles);
+          this.$dispatch(actions.changeStyles(styles));
         }
       }
     }
