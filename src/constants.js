@@ -11,3 +11,5 @@ export const tableConstants = {
   mivValueRow: '1',
   mivValueCol: 'A',
 };
+
+export const defaultTitle = 'New excel file';

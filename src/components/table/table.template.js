@@ -1,7 +1,5 @@
-import {getLetters} from '@/core/utils';
+import {getLetters, toInlineStyles} from '@/core/utils';
 import {defaultStyles} from '@/constants.js';
-import {camelToDashCase} from '../../core/utils';
-
 export const CODES = {
   A: 65,
   Z: 90,
@@ -9,15 +7,14 @@ export const CODES = {
 
 function toCell(parentCol, state) {
   const sizeState = state.sizeState;
-  const styles = Object.keys(defaultStyles)
-      .map((key) => `${camelToDashCase(key)}: ${defaultStyles[key]}`)
-      .join('; ');
+  // TODO render the right style
+  const styles = toInlineStyles(defaultStyles);
 
   return `
     <div 
       class="excel__table-row-data-cell"
       contenteditable 
-      ${sizeState[parentCol] ? `style="${styles}; width: ${sizeState[parentCol]}px"` : `${styles}`}
+      ${sizeState[parentCol] ? `style="${styles}; width: ${sizeState[parentCol]}px"` : `style="${styles}"`}
       data-parent-col="${parentCol}" 
       data-parent-row="" 
       data-id="${parentCol}" 

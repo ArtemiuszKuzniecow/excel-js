@@ -14,6 +14,10 @@ export class TableSelection {
     this.group = [];
   }
 
+  get selectedIds() {
+    return this.group.map(($el) => $el.id());
+  }
+
   selectOne($el) {
     this.clear();
     $el.addClass(tableConstants.selected);
