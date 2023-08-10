@@ -18,6 +18,7 @@ class Dom {
       this.$el.textContent = text;
       return this;
     }
+    if (this.$el.nodeName === 'INPUT') return this.$el.value;
     return this.$el.textContent.trim();
   }
 

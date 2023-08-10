@@ -9,7 +9,7 @@ export function rootReducer(state, action) {
       currentSize[action.data.id] = action.data.value;
       return {
         ...state,
-        sizeState: size,
+        sizeState: currentSize,
       };
     case CHANGE_TEXT:
       const currentText = action.data.text;
@@ -33,7 +33,6 @@ export function rootReducer(state, action) {
         [field]: val,
         currentStyles: {...state.currentStyles, ...action.data.value},
       };
-    // TODO check why it does not work?
     case CHANGE_TITLE:
       return {...state, title: action.data};
     default: return state;
