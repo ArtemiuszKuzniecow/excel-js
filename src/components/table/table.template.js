@@ -1,5 +1,6 @@
 import {toInlineStyles} from '@/core/utils';
 import {defaultStyles} from '@/constants.js';
+import {parse} from '@/core/parse';
 export const CODES = {
   A: 65,
   Z: 90,
@@ -17,10 +18,11 @@ function toCell(parentCol, state) {
       class="excel__table-row-data-cell"
       contenteditable 
       ${sizeState[parentCol] ? `style="${currentStyles}; width: ${sizeState[parentCol]}px;"` : `style="${currentStyles};"`}
+      data-value="${cellContent || ''}"
       data-parent-col="${parentCol}" 
-      data-parent-row="" 
+      data-parent-row="${parentRow}" 
       data-id="${parentRow}:${parentCol}" 
-      >${cellContent ? cellContent : ''}
+      >${parse(cellContent || '')}
     </div>
     `;
   };

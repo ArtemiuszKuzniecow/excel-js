@@ -4,7 +4,8 @@ import {currentCell, currentCells, resizeTable, navigateWithKeys} from './table.
 import {createTable} from './table.template';
 import {TableSelection} from './TableSelection';
 import * as actions from '@/redux/actions';
-import {defaultStyles} from '../../constants';
+import {defaultStyles} from '@/constants';
+import {parse} from '@/core/parse';
 
 export class Table extends ExcelComponent {
   static className = 'excel__table';
@@ -29,12 +30,12 @@ export class Table extends ExcelComponent {
     super.init();
     const $cell = this.$root.find('[data-id="1:A"]');
     this.selection.selectOne($cell);
-    this.$emit('formula:focus', $cell.text());
+    this.$emit('formula:focus', $cell);
     this.$dispatch(actions.changeText({text: $cell.text()}));
 
     this.$on('formula:input', (text) => {
       this.$dispatch(actions.changeText({text: text, id: this.selection.current.id()}));
-      this.selection.current.text(text);
+      this.selection.current.addAttribute('data-value', text).text(parse(text));
     });
 
     this.$on('formula:unfocus', () => {
@@ -64,9 +65,9 @@ export class Table extends ExcelComponent {
     if (target.data.resize) {
       this.resizeHandler(event);
     } else if (target.id()) {
-      this.$emit('formula:focus', target.text());
-      this.$dispatch(actions.changeText({text: target.text()}));
       const $cell = currentCell(event);
+      this.$emit('formula:focus', $cell);
+      this.$dispatch(actions.changeText({text: target.data.value}));
       const $prevCell = this.selection.current;
       if ($cell) {
         if (event.shiftKey) {
@@ -93,16 +94,19 @@ export class Table extends ExcelComponent {
     const navigationId = navigateWithKeys(event, this.selection.current);
     if (navigationId) {
       const $cell = this.$root.find(`[data-id="${navigationId}"]`);
+      this.$emit('formula:focus', $cell);
       this.selection.selectOne($cell);
-      textContent = $cell.text();
+      textContent = $cell.data.value;
       this.$dispatch(actions.changeText({text: textContent}));
+      this.selection.current.addAttribute('data-value', textContent);
       const styles = $cell.getStyles(Object.keys(defaultStyles));
       this.$dispatch(actions.changeStyles(styles));
       return;
     }
 
     this.$dispatch(actions.changeText({text: textContent, id: target.id()}));
-    this.$emit('formula:focus', textContent);
+    this.selection.current.addAttribute('data-value', textContent);
+    this.$emit('formula:focus', target);
   }
 }
 

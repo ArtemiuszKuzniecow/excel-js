@@ -75,10 +75,15 @@ class Dom {
     return elementsArray;
   }
 
+  getAttribute(attribute) {
+    return this.$el.getAttribute(attribute);
+  }
+
   addAttribute(attribute, value) {
     this.$el.setAttribute(attribute, value);
     return this;
   }
+
   deleteAttribute(attribute) {
     this.$el.removeAttribute(attribute);
     return this;

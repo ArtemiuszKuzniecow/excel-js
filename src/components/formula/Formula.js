@@ -20,7 +20,9 @@ export class Formula extends ExcelComponent {
   init() {
     super.init();
     const input = this.$root.find(`[data-input="true"]`);
-    input.text(this.store.state.currentText);
+    this.$on('formula:focus', ($cell) => {
+      input.text($cell.data.value);
+    });
   }
 
   storeChanged({currentText}) {
@@ -30,7 +32,6 @@ export class Formula extends ExcelComponent {
 
   onInput(event) {
     const text = event.target.textContent.trim();
-
     this.$emit('formula:input', text);
   }
 
