@@ -90,10 +90,10 @@ export function navigateWithKeys(event, $el) {
     } else if (['Enter', 'ArrowDown'].includes(keyName)) {
       currentId.row = `${Number(currentId.row) + 1}`;
     } else if (keyName === 'ArrowUp') {
-      if (currentId.row === tableConstants.mivValueRow) return;
+      if (currentId.row === tableConstants.minValueRow) return;
       currentId.row = `${Number(currentId.row) - 1}`;
     } else {
-      if (currentId.col === tableConstants.mivValueCol) return;
+      if (currentId.col === tableConstants.minValueCol) return;
       currentId.col = changeLetter(currentId.col, 'minus');
     }
   } else {

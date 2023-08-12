@@ -8,8 +8,8 @@ export const defaultStyles = {
 export const tableConstants = {
   selected: 'excel__table-row-data-cell-selected',
   mutliselect: 'excel__table-row-data-cell-multiselect',
-  mivValueRow: '1',
-  mivValueCol: 'A',
+  minValueRow: '1',
+  minValueCol: 'A',
 };
 
 export const defaultTitle = 'New excel file';
