@@ -13,3 +13,5 @@ export const tableConstants = {
 };
 
 export const defaultTitle = 'New excel file';
+
+export const pages = ['excel', 'dashboard'];

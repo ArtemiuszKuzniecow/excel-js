@@ -1,5 +1,6 @@
 import {$} from '@/core/dom';
 import {ActiveRoute} from './ActiveRoute';
+import {pages} from '@/constants';
 
 export class Router {
   constructor(selector, routes) {
@@ -9,6 +10,7 @@ export class Router {
 
     this.$placeholder = $(selector);
     this.routes = routes;
+    this.page = null;
 
     this.changePageHandler = this.changePageHandler.bind(this);
 
@@ -21,8 +23,20 @@ export class Router {
   }
 
   changePageHandler() {
-    console.log(ActiveRoute.path);
-    this.$placeholder.html(ActiveRoute.path);
+    if (this.page) {
+      this.page.destroy();
+    }
+    this.$placeholder.clear();
+
+    let currentPage;
+    if (!pages.includes(ActiveRoute.path)) currentPage = 'dashboard';
+    else currentPage = ActiveRoute.root;
+
+    const Page = this.routes[currentPage];
+    this.page = new Page(ActiveRoute.param);
+    this.$placeholder.append(this.page.getRoot());
+
+    this.page.afterRender();
   }
 
   destroy() {
