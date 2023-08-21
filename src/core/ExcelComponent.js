@@ -9,7 +9,7 @@ export class ExcelComponent extends DomListener {
     this.subscribe = options.subscribe || [];
     this.store = options.store;
     this.unsubscribers = [];
-    this.storeSub = null;
+    this.storeSub = null; // TODO Why do we need it here?
     this.prepare();
   }
 
@@ -44,6 +44,6 @@ export class ExcelComponent extends DomListener {
   destroy() {
     this.removeDOMListeners();
     this.unsubscribers.forEach((unsub) => unsub());
-    this.storeSub.unsubscribe();
+    // this.storeSub.unsubscribe(); TODO Why do we need it here?
   }
 }
