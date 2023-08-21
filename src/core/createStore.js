@@ -1,7 +1,7 @@
 export class Store {
   constructor(rootReducer, initialState = {}) {
     this.rootReducer = rootReducer;
-    this.state = rootReducer({...initialState}, {type: '__INIT__'});
+    this.state = this.rootReducer({...initialState}, {type: '__INIT__'});
     this.listeners = [];
   }
 
@@ -16,7 +16,9 @@ export class Store {
 
   dispatch(action) {
     this.state = this.rootReducer(this.state, action);
-    this.listeners.forEach((listener) => listener(this.state));
+    this.listeners.forEach((listener) => {
+      listener(this.state);
+    });
   }
 
   getState() {
