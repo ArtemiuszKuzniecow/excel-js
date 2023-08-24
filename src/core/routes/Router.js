@@ -1,4 +1,4 @@
-import {$} from '@/core/dom';
+import {$} from '@core/dom';
 import {ActiveRoute} from './ActiveRoute';
 import {pages, initialPage} from '@/constants';
 
@@ -29,7 +29,7 @@ export class Router {
     this.$placeholder.clear();
 
     let currentPage;
-    if (!pages.includes(ActiveRoute.path)) currentPage = initialPage;
+    if (!pages.includes(ActiveRoute.root)) currentPage = initialPage;
     else currentPage = ActiveRoute.root;
 
     const Page = this.routes[currentPage];

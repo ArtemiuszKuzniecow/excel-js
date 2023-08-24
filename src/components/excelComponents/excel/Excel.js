@@ -1,6 +1,6 @@
-import {$} from '@/core/dom';
-import {Emitter} from '@/core/Emit';
-import {StoreSubscriber} from '@/core/StoreSubscriber';
+import {$} from '@core/dom';
+import {Emitter} from '@core/Emit';
+import {StoreSubscriber} from '@core/StoreSubscriber';
 
 export class Excel {
   constructor(options) {

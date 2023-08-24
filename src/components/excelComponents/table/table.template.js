@@ -1,6 +1,6 @@
-import {toInlineStyles} from '@/core/utils';
+import {toInlineStyles} from '@core/utils.js';
 import {defaultStyles} from '@/constants.js';
-import {parse} from '@/core/parse';
+import {parse} from '@core/parse';
 export const CODES = {
   A: 65,
   Z: 90,
