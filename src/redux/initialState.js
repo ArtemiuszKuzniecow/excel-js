@@ -8,6 +8,7 @@ const defaultState = {
   stylesState: {},
   currentText: '',
   currentStyles: defaultStyles,
+  lastOpening: Date.now(),
 };
 
 const normalize = (state) => ({

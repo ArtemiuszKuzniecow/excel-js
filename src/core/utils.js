@@ -17,6 +17,10 @@ export function storage(key, data = null) {
   }
 }
 
+export function deleteFromStorage(key) {
+  localStorage.removeItem(key);
+}
+
 export function getLetters(str, word) {
   const letters = [];
   let index = -1;

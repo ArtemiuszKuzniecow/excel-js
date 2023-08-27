@@ -17,3 +17,16 @@ export const defaultTitle = 'New excel file';
 export const pages = ['excel', 'dashboard'];
 
 export const initialPage = 'dashboard';
+
+export const headerButtons = [
+  {
+    data: 'delete',
+    icon: 'excel__header-buttons-item-icon-delete',
+    content: 'delete',
+  }, {
+    data: 'exit',
+    icon: 'excel__header-buttons-item-icon-exit',
+    content: 'exit_to_app',
+  },
+];
+

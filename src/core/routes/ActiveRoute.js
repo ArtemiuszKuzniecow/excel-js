@@ -10,4 +10,8 @@ export class ActiveRoute {
   static get root() {
     return ActiveRoute.path.split('/')[0];
   }
+
+  static redirectToMainPage() {
+    window.location = window.location.origin;
+  }
 }

@@ -1,8 +1,12 @@
 import {ExcelComponent} from '@core/ExcelComponent';
 import {$} from '@core/dom';
 import {changeTitle} from '@/redux/actions';
-import {defaultTitle} from '@/constants';
+import {defaultTitle, headerButtons} from '@/constants';
 import {debounce} from '@core/utils';
+import {onButtons} from './header.template';
+import {ActiveRoute} from '@core/routes/ActiveRoute';
+import {deleteFromStorage} from '@core/utils';
+import * as actions from '@/redux/actions';
 
 export class Header extends ExcelComponent {
   static className = 'excel__header';
@@ -17,21 +21,30 @@ export class Header extends ExcelComponent {
 
   prepare() {
     this.onInput = debounce(this.onInput, 500);
+    this.$dispatch(actions.lastOpening(Date.now()));
   }
 
   toHTML() {
     const title = this.store.getState().title;
     return `<input type="text" class="excel__header-input" value="${title || defaultTitle}">
                 <div class="excel__header-buttons">
-                    <div class="excel__header-buttons-item" data-header-button="delete">
-                        <i class="excel__header-buttons-item-icon-delete material-icons">delete</i>
-                    </div>
-                <div class="excel__header-buttons-item" data-header-button="exit"><i
-                    class="excel__header-buttons-item-icon-exit material-icons">exit_to_app</i></div>`;
+                  ${headerButtons.map((button) => onButtons(button.data, button.icon, button.content)).join('') }`;
   }
 
   onInput(event) {
     const $target = $(event.target);
     this.$dispatch(changeTitle($target.text()));
+  }
+
+  onClick(event) {
+    const $target = $(event.target);
+    if ($target.data.headerButton === 'delete') {
+      const key = ActiveRoute.path.split('/').join(':');
+      deleteFromStorage(key);
+      ActiveRoute.redirectToMainPage();
+    } else if ($target.data.headerButton === 'exit') {
+      ActiveRoute.redirectToMainPage();
+    }
+    return;
   }
 }

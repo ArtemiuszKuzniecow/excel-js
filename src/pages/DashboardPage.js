@@ -7,7 +7,7 @@ export class DashboardPage extends Page {
     const now = Date.now().toString();
     return $.create('div', 'db').html(`
                 <div class="db__header">
-                <h1>Excel dahsboard</h1>
+                <h1>Pure JavaScript Excel</h1>
             </div>
             <div class="db__new">
                 <div class="db__view">

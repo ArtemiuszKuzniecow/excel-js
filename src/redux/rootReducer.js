@@ -1,4 +1,4 @@
-import {CHANGE_TEXT, CHANGE_STYLES, TABLE_RESIZE, APPLY_STYLE, CHANGE_TITLE} from './types';
+import {CHANGE_TEXT, CHANGE_STYLES, TABLE_RESIZE, APPLY_STYLE, CHANGE_TITLE, LAST_OPENING} from './types';
 
 export function rootReducer(state, action) {
   let field;
@@ -35,6 +35,8 @@ export function rootReducer(state, action) {
       };
     case CHANGE_TITLE:
       return {...state, title: action.data};
+    case LAST_OPENING:
+      return {...state, lastOpening: action.data};
     default: return state;
   }
 }
