@@ -127,6 +127,15 @@ class Dom {
     this.$el.focus();
   }
 
+  getStyle(style) {
+    const computedStyle = window.getComputedStyle(this.$el);
+    return computedStyle.getPropertyValue(style);
+  }
+
+  blurElement() {
+    this.$el.blur();
+  }
+
   id(parse) {
     if (parse) {
       const parsed = this.data.id.split(':');

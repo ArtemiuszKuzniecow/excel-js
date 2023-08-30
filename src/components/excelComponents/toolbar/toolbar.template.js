@@ -16,6 +16,18 @@ function toButton(button) {
     `;
 }
 
+function changeTextDecorationUnderline(state, decoration) {
+  if (state.trim() === decoration && !state.includes('none')) {
+    return 'none';
+  } else if (!state.includes(decoration) && state.includes('none')) {
+    return decoration;
+  } else if (state.includes(decoration) && !state.includes('none')) {
+    return state.replace(decoration, '');
+  } else if (!state.includes(decoration) && !state.includes('none')) {
+    return `${state} ${decoration}`;
+  }
+}
+
 export function createToolbar(state) {
   const buttons = [
     {
@@ -45,8 +57,13 @@ export function createToolbar(state) {
     },
     {
       icon: 'format_underlined',
-      active: state.textDecoration === 'underline',
-      value: {textDecoration: state.textDecoration === 'underline' ? 'none' : 'underline'},
+      active: state.textDecoration.includes('underline'),
+      value: {textDecoration: changeTextDecorationUnderline(state.textDecoration, 'underline')},
+    },
+    {
+      icon: 'format_strikethrough',
+      active: state.textDecoration.includes('line-through'),
+      value: {textDecoration: changeTextDecorationUnderline(state.textDecoration, 'line-through')},
     },
   ];
   return buttons.map(toButton).join('');

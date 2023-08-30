@@ -1,6 +1,6 @@
 import {$} from '@core/dom';
 import {ExcelComponent} from '@core/ExcelComponent';
-import {currentCell, currentCells, resizeTable, navigateWithKeys} from './table.methods';
+import {currentCell, currentCells, resizeTable, navigateWithKeys, getFullContent} from './table.methods';
 import {createTable} from './table.template';
 import {TableSelection} from './TableSelection';
 import * as actions from '@/redux/actions';
@@ -13,7 +13,7 @@ export class Table extends ExcelComponent {
   constructor($root, options) {
     super($root, {
       name: 'Table',
-      listeners: ['mousedown', 'keydown'],
+      listeners: ['mousedown', 'keydown', 'input', 'paste'],
       ...options,
     });
   }
@@ -78,6 +78,7 @@ export class Table extends ExcelComponent {
           this.selection.selectGroup(cells);
         } else {
           this.selection.selectOne($cell);
+          getFullContent($cell);
           const styles = $cell.getStyles(Object.keys(defaultStyles));
           this.$dispatch(actions.changeStyles(styles));
         }
@@ -90,10 +91,10 @@ export class Table extends ExcelComponent {
     const currentText = target.text();
     let textContent = event?.key?.length === 1 ? currentText + event.key : currentText;
     if (event?.key === 'Backspace') textContent = currentText.substring(0, currentText.length - 1);
-
     const navigationId = navigateWithKeys(event, this.selection.current);
     if (navigationId) {
       const $cell = this.$root.find(`[data-id="${navigationId}"]`);
+      getFullContent($cell);
       this.$emit('formula:focus', $cell);
       this.selection.selectOne($cell);
       textContent = $cell.data.value;
@@ -103,10 +104,26 @@ export class Table extends ExcelComponent {
       this.$dispatch(actions.changeStyles(styles));
       return;
     }
+  }
 
+  onInput(event) {
+    const target = $(event.target);
+    const currentText = target.text();
+    let textContent = event?.key?.length === 1 ? currentText + event.key : currentText;
     this.$dispatch(actions.changeText({text: textContent, id: target.id()}));
     this.selection.current.addAttribute('data-value', textContent);
     this.$emit('formula:focus', target);
   }
+
+  onPaste(event) {
+    event.preventDefault();
+    const target = $(event.target);
+    const textContent = event.clipboardData.getData('text/plain');
+    this.$dispatch(actions.changeText({text: textContent, id: target.id()}));
+    this.selection.current.addAttribute('data-value', textContent);
+    this.selection.current.text(textContent);
+    this.$emit('formula:focus', target);
+  }
 }
+
 
