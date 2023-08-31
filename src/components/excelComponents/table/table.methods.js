@@ -101,12 +101,3 @@ export function navigateWithKeys(event, $el) {
   }
   return `${currentId.row}:${currentId.col}`;
 }
-
-export function getFullContent($el) {
-  console.log($el.getStyle('height'), $el.getStyle('z-index'), $el.getStyle('background-color'), $el.getStyle('max-height'), $el.getStyle('overflow'));
-  // $el.css({
-  //   height: $el.$el.scrollHeight + 'px',
-  //   zIndex: 2000,
-  //   backgroundColor: 'white',
-  // });
-}

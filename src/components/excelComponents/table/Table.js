@@ -1,6 +1,6 @@
 import {$} from '@core/dom';
 import {ExcelComponent} from '@core/ExcelComponent';
-import {currentCell, currentCells, resizeTable, navigateWithKeys, getFullContent} from './table.methods';
+import {currentCell, currentCells, resizeTable, navigateWithKeys} from './table.methods';
 import {createTable} from './table.template';
 import {TableSelection} from './TableSelection';
 import * as actions from '@/redux/actions';
@@ -32,6 +32,7 @@ export class Table extends ExcelComponent {
     this.selection.selectOne($cell);
     this.$emit('formula:focus', $cell);
     this.$dispatch(actions.changeText({text: $cell.text()}));
+    this.selection.getFullContent($cell);
 
     this.$on('formula:input', (text) => {
       this.$dispatch(actions.changeText({text: text, id: this.selection.current.id()}));
@@ -78,9 +79,9 @@ export class Table extends ExcelComponent {
           this.selection.selectGroup(cells);
         } else {
           this.selection.selectOne($cell);
-          getFullContent($cell);
           const styles = $cell.getStyles(Object.keys(defaultStyles));
           this.$dispatch(actions.changeStyles(styles));
+          this.selection.getFullContent($cell);
         }
       }
     }
@@ -94,7 +95,6 @@ export class Table extends ExcelComponent {
     const navigationId = navigateWithKeys(event, this.selection.current);
     if (navigationId) {
       const $cell = this.$root.find(`[data-id="${navigationId}"]`);
-      getFullContent($cell);
       this.$emit('formula:focus', $cell);
       this.selection.selectOne($cell);
       textContent = $cell.data.value;
@@ -102,6 +102,7 @@ export class Table extends ExcelComponent {
       this.selection.current.addAttribute('data-value', textContent);
       const styles = $cell.getStyles(Object.keys(defaultStyles));
       this.$dispatch(actions.changeStyles(styles));
+      this.selection.getFullContent($cell);
       return;
     }
   }
