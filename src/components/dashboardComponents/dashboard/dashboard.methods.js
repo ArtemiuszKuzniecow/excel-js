@@ -1,4 +1,4 @@
-import {storage} from '@/core/utils';
+import {storage} from '@core/utils';
 
 function createRecord(name, link, date) {
   return `
