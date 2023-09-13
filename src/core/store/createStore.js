@@ -7,8 +7,7 @@ export class Store {
 
   subscribe(fn) {
     this.listeners.push(fn);
-    let listeners = this.listeners;
-    return {unsubscribe: () => listeners = listeners.filter((listener) => listener !== fn)};
+    return {unsubscribe: () => this.listeners = this.listeners.filter((listener) => listener !== fn)};
   }
 
   dispatch(action) {
