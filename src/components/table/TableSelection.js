@@ -1,4 +1,4 @@
-import {constants} from './table.constants';
+import {tableConstants} from '@/constants.js';
 
 export class TableSelection {
   constructor() {
@@ -8,15 +8,19 @@ export class TableSelection {
 
   clear() {
     this.group.forEach(($el) => {
-      if ($el.$el.className.includes(constants.selected)) $el.removeClass(constants.selected);
-      if ($el.$el.className.includes(constants.mutliselect)) $el.removeClass(constants.mutliselect);
+      if ($el.$el.className.includes(tableConstants.selected)) $el.removeClass(tableConstants.selected);
+      if ($el.$el.className.includes(tableConstants.mutliselect)) $el.removeClass(tableConstants.mutliselect);
     });
     this.group = [];
   }
 
+  get selectedIds() {
+    return this.group.map(($el) => $el.id());
+  }
+
   selectOne($el) {
     this.clear();
-    $el.addClass(constants.selected);
+    $el.addClass(tableConstants.selected);
     $el.focusElement();
     this.group.push($el);
     this.current = $el;
@@ -25,9 +29,13 @@ export class TableSelection {
   selectGroup($els) {
     this.clear();
     $els.forEach((el) => {
-      el.addClass(constants.mutliselect);
+      el.addClass(tableConstants.mutliselect);
       this.group.push(el);
     });
-    this.current.addClass(constants.selected);
+    this.current.addClass(tableConstants.selected);
+  }
+
+  applyStyle(style) {
+    this.group.forEach(($el) => $el.css(style));
   }
 }

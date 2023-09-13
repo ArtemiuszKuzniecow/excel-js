@@ -18,6 +18,7 @@ class Dom {
       this.$el.textContent = text;
       return this;
     }
+    if (this.$el.nodeName === 'INPUT') return this.$el.value;
     return this.$el.textContent.trim();
   }
 
@@ -74,10 +75,15 @@ class Dom {
     return elementsArray;
   }
 
+  getAttribute(attribute) {
+    return this.$el.getAttribute(attribute);
+  }
+
   addAttribute(attribute, value) {
     this.$el.setAttribute(attribute, value);
     return this;
   }
+
   deleteAttribute(attribute) {
     this.$el.removeAttribute(attribute);
     return this;
@@ -102,6 +108,13 @@ class Dom {
     Object.keys(style).forEach((styleName) => {
       this.$el.style[styleName] = style[styleName];
     });
+  }
+
+  getStyles(style = []) {
+    return style.reduce((res, style) => {
+      res[style] = this.$el.style[style];
+      return res;
+    }, {});
   }
 
   focusElement() {

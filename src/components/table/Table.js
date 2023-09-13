@@ -4,6 +4,8 @@ import {currentCell, currentCells, resizeTable, navigateWithKeys} from './table.
 import {createTable} from './table.template';
 import {TableSelection} from './TableSelection';
 import * as actions from '@/redux/actions';
+import {defaultStyles} from '@/constants';
+import {parse} from '@/core/parse';
 
 export class Table extends ExcelComponent {
   static className = 'excel__table';
@@ -28,16 +30,24 @@ export class Table extends ExcelComponent {
     super.init();
     const $cell = this.$root.find('[data-id="1:A"]');
     this.selection.selectOne($cell);
-    this.$emit('formula:focus', $cell.text());
+    this.$emit('formula:focus', $cell);
     this.$dispatch(actions.changeText({text: $cell.text()}));
 
     this.$on('formula:input', (text) => {
       this.$dispatch(actions.changeText({text: text, id: this.selection.current.id()}));
-      this.selection.current.text(text);
+      this.selection.current.addAttribute('data-value', text).text(parse(text));
     });
 
     this.$on('formula:unfocus', () => {
       this.selection.current.focusElement();
+    });
+
+    this.$on('toolbar:applyStyle', (value) => {
+      this.selection.applyStyle(value);
+      this.$dispatch(actions.applyStyle({
+        value,
+        ids: this.selection.selectedIds,
+      }));
     });
   }
 
@@ -55,9 +65,9 @@ export class Table extends ExcelComponent {
     if (target.data.resize) {
       this.resizeHandler(event);
     } else if (target.id()) {
-      this.$emit('formula:focus', target.text());
-      this.$dispatch(actions.changeText({text: target.text()}));
       const $cell = currentCell(event);
+      this.$emit('formula:focus', $cell);
+      this.$dispatch(actions.changeText({text: target.data.value}));
       const $prevCell = this.selection.current;
       if ($cell) {
         if (event.shiftKey) {
@@ -68,6 +78,8 @@ export class Table extends ExcelComponent {
           this.selection.selectGroup(cells);
         } else {
           this.selection.selectOne($cell);
+          const styles = $cell.getStyles(Object.keys(defaultStyles));
+          this.$dispatch(actions.changeStyles(styles));
         }
       }
     }
@@ -75,21 +87,26 @@ export class Table extends ExcelComponent {
 
   onKeydown(event) {
     const target = $(event.target);
-
-    // TODO create helper to optimize it
-    let textContent = event?.key?.length === 1 ? target.text() + event.key : target.text();
-    if (event?.key === 'Backspace') textContent = target.text().substring(0, target.text().length - 1);
+    const currentText = target.text();
+    let textContent = event?.key?.length === 1 ? currentText + event.key : currentText;
+    if (event?.key === 'Backspace') textContent = currentText.substring(0, currentText.length - 1);
 
     const navigationId = navigateWithKeys(event, this.selection.current);
     if (navigationId) {
-      this.selection.selectOne(this.$root.find(`[data-id="${navigationId}"]`));
-      textContent = this.$root.find(`[data-id="${navigationId}"]`).text();
+      const $cell = this.$root.find(`[data-id="${navigationId}"]`);
+      this.$emit('formula:focus', $cell);
+      this.selection.selectOne($cell);
+      textContent = $cell.data.value;
       this.$dispatch(actions.changeText({text: textContent}));
+      this.selection.current.addAttribute('data-value', textContent);
+      const styles = $cell.getStyles(Object.keys(defaultStyles));
+      this.$dispatch(actions.changeStyles(styles));
       return;
     }
 
     this.$dispatch(actions.changeText({text: textContent, id: target.id()}));
-    this.$emit('formula:focus', textContent);
+    this.selection.current.addAttribute('data-value', textContent);
+    this.$emit('formula:focus', target);
   }
 }
 

@@ -1,6 +1,6 @@
 import {$} from '@core/dom';
 import {changeLetter} from '../../core/utils';
-import {constants} from './table.constants';
+import {tableConstants} from '@/constants.js';
 
 export function resizeTable(event, $root) {
   return new Promise((resolve) => {
@@ -90,10 +90,10 @@ export function navigateWithKeys(event, $el) {
     } else if (['Enter', 'ArrowDown'].includes(keyName)) {
       currentId.row = `${Number(currentId.row) + 1}`;
     } else if (keyName === 'ArrowUp') {
-      if (currentId.row === constants.mivValueRow) return;
+      if (currentId.row === tableConstants.minValueRow) return;
       currentId.row = `${Number(currentId.row) - 1}`;
     } else {
-      if (currentId.col === constants.mivValueCol) return;
+      if (currentId.col === tableConstants.minValueCol) return;
       currentId.col = changeLetter(currentId.col, 'minus');
     }
   } else {

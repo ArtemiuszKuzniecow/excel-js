@@ -1,5 +1,6 @@
-import {getLetters} from '@/core/utils';
-
+import {toInlineStyles} from '@/core/utils';
+import {defaultStyles} from '@/constants.js';
+import {parse} from '@/core/parse';
 export const CODES = {
   A: 65,
   Z: 90,
@@ -7,17 +8,24 @@ export const CODES = {
 
 function toCell(parentCol, state) {
   const sizeState = state.sizeState;
-  return `
+  const styles = toInlineStyles(defaultStyles);
+  return (parentRow) => {
+    const cellContent = state.dataState?.[`${parentRow}:${parentCol}`];
+    const currentCellStyle = state.stylesState?.[`${parentRow}:${parentCol}`];
+    const currentStyles = currentCellStyle ? toInlineStyles({...defaultStyles, ...currentCellStyle}) : styles;
+    return `
     <div 
       class="excel__table-row-data-cell"
       contenteditable 
-      ${sizeState[parentCol] ? `style="width: ${sizeState[parentCol]}px"` : ''}
+      ${sizeState[parentCol] ? `style="${currentStyles}; width: ${sizeState[parentCol]}px;"` : `style="${currentStyles};"`}
+      data-value="${cellContent || ''}"
       data-parent-col="${parentCol}" 
-      data-parent-row="" 
-      data-id="${parentCol}" 
-      >
+      data-parent-row="${parentRow}" 
+      data-id="${parentRow}:${parentCol}" 
+      >${parse(cellContent || '')}
     </div>
     `;
+  };
 }
 
 function toColumn(col, width) {
@@ -35,31 +43,14 @@ function toColumn(col, width) {
     `;
 }
 
-function toRow(content, row = '', height, state = '') {
-  const cols = getLetters(content, 'data-parent-col="');
-  if (row.length) {
-    content =
-      content
-          .replaceAll(`data-parent-row=""`, `data-parent-row="${row}"`)
-          .replaceAll(`data-id="`, `data-id="${row}:`);
-  }
-  if (state.dataState) {
-    if (Array.isArray(cols)) {
-      cols.forEach((col) => {
-        content =
-          content.replace(`data-id="${row}:${col}" 
-      >`, `data-id="${row}:${col}"
-      >${state.dataState?.[`${row}:${col}`] ? state.dataState[`${row}:${col}`]: ''}`);
-      });
-    }
-  }
+function toRow(content, row = '', height) {
   return `
      <div class="excel__table-row" data-type="resizable" data-row="${row}" ${height ? `style="height: ${height}px"` : ''}>
         <div class="excel__table-row-info">
         ${row}
           ${row && '<div class="excel__table-row-info-resize" data-resize="row"></div>'}
         </div>
-        <div class="excel__table-row-data" >${content}</div>
+        <div class="excel__table-row-data">${content}</div>
     </div>
     `;
 }
@@ -80,13 +71,14 @@ export function createTable(rowsCount = 15, state = {}) {
 
   const cells = new Array(colsCount)
       .fill('')
-      .map((_, index) => toCell(toChar(_, index), state))
-      .join('');
+      .map((_, index) => toCell(toChar(_, index), state));
+
+  const getCells = (row) => cells.map((cell) => cell(row)).join('');
 
   rows.push(toRow(cols));
 
   for (let i = 0; i < rowsCount; i++) {
-    rows.push(toRow(cells, `${i + 1}`, sizeState[i+1], state));
+    rows.push(toRow(getCells(`${i + 1}`), `${i + 1}`, sizeState[i+1]));
   }
 
   return rows.join('');
