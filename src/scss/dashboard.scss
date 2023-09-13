@@ -53,6 +53,12 @@
 
     &__list {
         @include clear-list;
+        
+        &-warning {
+            text-align: center;
+            font-size: large;
+            color:$dashboard-warning-color;
+        }
 
         &-record {
             display: flex;

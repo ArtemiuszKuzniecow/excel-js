@@ -1,4 +1,4 @@
-import {CHANGE_TEXT, CHANGE_STYLES, TABLE_RESIZE, APPLY_STYLE, CHANGE_TITLE} from './types';
+import {CHANGE_TEXT, CHANGE_STYLES, TABLE_RESIZE, APPLY_STYLE, CHANGE_TITLE, LAST_OPENING} from './types';
 
 export function tableResize(data) {
   return {
@@ -31,6 +31,14 @@ export function applyStyle(data) {
 export function changeTitle(data) {
   return {
     type: CHANGE_TITLE,
+    data,
+  };
+}
+
+
+export function lastOpening(data) {
+  return {
+    type: LAST_OPENING,
     data,
   };
 }

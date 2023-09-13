@@ -17,6 +17,10 @@ export function storage(key, data = null) {
   }
 }
 
+export function deleteFromStorage(key) {
+  localStorage.removeItem(key);
+}
+
 export function getLetters(str, word) {
   const letters = [];
   let index = -1;
@@ -57,4 +61,8 @@ export function debounce(fn, wait) {
     clearTimeout(timeout);
     timeout = setTimeout(later, wait);
   };
+}
+
+export function clone(obj) {
+  return JSON.parse(JSON.stringify(obj));
 }

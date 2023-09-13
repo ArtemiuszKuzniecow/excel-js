@@ -1,5 +1,5 @@
 import {$} from '@core/dom';
-import {changeLetter} from '../../core/utils';
+import {changeLetter} from '@core/utils';
 import {tableConstants} from '@/constants.js';
 
 export function resizeTable(event, $root) {
