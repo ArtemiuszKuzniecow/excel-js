@@ -1,5 +1,5 @@
 import {Page} from '@core/Pages';
-import {Store} from '@core/createStore';
+import {Store} from '@core/store/createStore';
 import {debounce, storage} from '@core/utils';
 import {Excel} from '@/components/excelComponents/excel/Excel';
 import {Formula} from '@/components/excelComponents/formula/Formula';
