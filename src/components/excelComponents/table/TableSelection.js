@@ -3,6 +3,8 @@ import {tableConstants} from '@/constants.js';
 export class TableSelection {
   constructor() {
     this.group = [];
+    this.prevCell = null;
+    this.prevState = {};
     this.current = null;
   }
 
@@ -37,5 +39,33 @@ export class TableSelection {
 
   applyStyle(style) {
     this.group.forEach(($el) => $el.css(style));
+  }
+
+  getFullContent($el) {
+    const currentPrevCell = this.current;
+    const currentPrevState = {
+      height: $el.getStyle('height'),
+      zIndex: $el.getStyle('z-index'),
+      backgroundColor: $el.getStyle('background-color'),
+      maxHeight: $el.getStyle('max-height'),
+      overflow: $el.getStyle('overflow'),
+    };
+
+    if (this.prevCell) {
+      if (this.prevCell.id() === this.current.id()) return;
+    }
+
+    if (this.prevCell && this.prevState) {
+      this.prevCell.css(this.prevState);
+    }
+
+    this.prevCell = currentPrevCell;
+    this.prevState = currentPrevState;
+
+    this.current.css({
+      height: $el.$el.scrollHeight + 'px',
+      zIndex: 2000,
+      backgroundColor: 'white',
+    });
   }
 }

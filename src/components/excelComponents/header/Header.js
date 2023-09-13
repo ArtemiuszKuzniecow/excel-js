@@ -14,7 +14,7 @@ export class Header extends ExcelComponent {
   constructor($root, options) {
     super($root, {
       name: 'Header',
-      listeners: ['input', 'click'],
+      listeners: ['input', 'click', 'keydown'],
       ...options,
     });
   }
@@ -26,7 +26,7 @@ export class Header extends ExcelComponent {
 
   toHTML() {
     const title = this.store.getState().title;
-    return `<input type="text" class="excel__header-input" value="${title || defaultTitle}">
+    return `<input type="text" class="excel__header-input" data-header value="${title || defaultTitle}">
                 <div class="excel__header-buttons">
                   ${headerButtons.map((button) => onButtons(button.data, button.icon, button.content)).join('') }`;
   }
@@ -46,5 +46,11 @@ export class Header extends ExcelComponent {
       ActiveRoute.redirectToMainPage();
     }
     return;
+  }
+
+  onKeydown(event) {
+    const headerInput = this.$root.find(`[data-header]`);
+    if (event?.key === 'Enter') headerInput.blurElement();
+    else return;
   }
 }

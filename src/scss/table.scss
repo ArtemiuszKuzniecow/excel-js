@@ -50,7 +50,8 @@
                 border-top: 0;
                 border-left: 0;
                 color: #111;
-                white-space: nowrap;
+                white-space: wrap;
+                overflow: hidden;
 
                 &-selected {
                     border: none;
